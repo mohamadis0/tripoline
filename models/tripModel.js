@@ -35,13 +35,14 @@ const tripSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    // associatedBus: [
-    //     {
-    //         type: mongoose.Schema.Types.ObjectId,
-    //         ref: 'Bus'
-    //     }
+    associatedBuses: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Bus',
+            required: true
+        }
 
-    // ]
+    ]
 }
     , {
         timestamps: true,

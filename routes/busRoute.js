@@ -10,9 +10,9 @@ router.get('/', busController.getAllBuses);
 router.post('/createBus', busController.addBus);
 
 
-router.put('bus/:busId', busController.updateBus);
+router.put('/:busId', busController.updateBus);
 
 
-router.delete('bus/:busId', busController.deleteBus);
+router.delete('/:busId', busController.deleteBus);
 
 module.exports = router;

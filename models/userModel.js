@@ -26,9 +26,9 @@ const userSchema = new mongoose.Schema({
         required: [true, "Please enter confirm password"],
         minlength: 6,
     },
-    type: {
-        type: String,
-        enum: ["user", "admin"],
+    isAdmin: {
+        type: Boolean,
+        default: false,
     }
 
 },

@@ -4,7 +4,7 @@ const Trip = require('../models/tripModel');
 
 const getAllTrips = async (req, res) => {
   try {
-    const trips = await Trip.find();
+    const trips = await Trip.find().populate('associatedBuses');
     res.json(trips);
   } catch (error) {
     res.status(500).json({ error: 'An error occurred while fetching trips.' });
@@ -14,6 +14,7 @@ const getAllTrips = async (req, res) => {
 
 const createTrip = async (req, res) => {
   try {
+    // console.log(req.body)
     const trip = new Trip(req.body);
     const savedTrip = await trip.save();
     res.status(201).json(savedTrip);
@@ -38,7 +39,8 @@ const deleteTrip = async (req, res) => {
   try {
     const { tripId } = req.params;
     await Trip.findByIdAndDelete(tripId);
-    res.json({ message: 'Trip deleted successfully.' });
+    const trips = await Trip.find();
+    res.json({ message: 'Trip deleted successfully.', data: trips });
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while deleting the trip.' });
   }

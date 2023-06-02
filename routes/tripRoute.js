@@ -10,9 +10,9 @@ router.get('/', tripController.getAllTrips);
 router.post('/', tripController.createTrip);
 
 // Update a trip
-router.put('trip/:tripId', tripController.updateTrip);
+router.put('/:tripId', tripController.updateTrip);
 
 // Delete a trip
-router.delete('trip/:tripId', tripController.deleteTrip);
+router.delete('/:tripId', tripController.deleteTrip);
 
 module.exports = router;

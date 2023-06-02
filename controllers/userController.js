@@ -20,7 +20,6 @@ const createSendToken = (user, statusCode, res) => {
 
 const signup = async (req, res) => {
   const {
-
     username,
     email,
     password,
@@ -29,7 +28,7 @@ const signup = async (req, res) => {
   try {
     const emailCheck = await User.findOne({ email: email });
     if (emailCheck) {
-      return res.status(409).json({ messsage: "The email is already in use" });
+      return res.status(409).json({ message: "The email is already in use" });
     }
 
     if (!validator.isEmail(email)) {
@@ -38,15 +37,14 @@ const signup = async (req, res) => {
     if (password !== passwordConfirm) {
       return res
         .status(400)
-        .json({ message: "password and passwordConfirm dont match!!" });
+        .json({ message: "password and passwordConfirm don't match!!" });
     }
-
+    
     const newUser = await User.create({
       username: username,
       email: email,
       password: password,
       passwordConfirm: passwordConfirm,
-
     });
     createSendToken(newUser, 201, res);
   } catch (err) {
@@ -54,6 +52,7 @@ const signup = async (req, res) => {
     console.log(err);
   }
 };
+
 
 const loginUser = async (req, res) => {
   try {
