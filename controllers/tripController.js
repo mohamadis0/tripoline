@@ -1,7 +1,5 @@
 const Trip = require('../models/tripModel');
 
-
-
 const getAllTrips = async (req, res) => {
   try {
     const trips = await Trip.find().populate('associatedBuses');
@@ -23,6 +21,26 @@ const createTrip = async (req, res) => {
   }
 };
 
+const getBatchTrips = async (req, res) => {
+  try {
+    const trips = await Trip.find().populate('associatedBuses');
+    const batchTrips = [];
+
+    trips.forEach(trip => {
+      const startDate = trip.startDate;
+      const endDate = trip.endDate;
+      const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // duration in days
+
+      for (let i = 0; i < duration; i++) {
+        batchTrips.push(trip);
+      }
+    });
+
+    res.json(batchTrips);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching batch trips.' });
+  }
+};
 
 const updateTrip = async (req, res) => {
   try {
@@ -46,4 +64,4 @@ const deleteTrip = async (req, res) => {
   }
 };
 
-module.exports = { getAllTrips, createTrip, updateTrip, deleteTrip };
+module.exports = { getAllTrips, createTrip, updateTrip, deleteTrip, getBatchTrips };

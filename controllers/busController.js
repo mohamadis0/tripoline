@@ -1,45 +1,75 @@
-const Bus = require('../models/BusModel');
+const Bus = require('../models/busModel');
 
-const getAllBuses = async (req, res) => {
+exports.getAllBuses = async (req, res) => {
   try {
-    const buses = await Bus.find();
+    const buses = await Bus.find().populate('busDriver');
     res.json(buses);
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while fetching buses.' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 
-const addBus = async (req, res) => {
+// Create a new bus
+exports.createBus = async (req, res) => {
   try {
-    const bus = new Bus(req.body);
-    const savedBus = await bus.save();
+    const { Busname, numberOfSeats, busDriver } = req.body;
+    const newBus = new Bus({
+      Busname,
+      numberOfSeats,
+      busDriver
+    });
+    const savedBus = await newBus.save();
     res.status(201).json(savedBus);
   } catch (error) {
-    res.status(400).json({ error: 'An error occurred while adding the bus.' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-
-const updateBus = async (req, res) => {
+// Get a single bus by ID
+exports.getBusById = async (req, res) => {
   try {
-    const { busId } = req.params;
-    const updatedBus = await Bus.findByIdAndUpdate(busId, req.body, { new: true });
+    const bus = await Bus.findById(req.params.id);
+    if (!bus) {
+      return res.status(404).json({ error: 'Bus not found' });
+    }
+    res.json(bus);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Update a bus by ID
+exports.updateBus = async (req, res) => {
+  try {
+    const { Busname, numberOfSeats, busDriver } = req.body;
+    const updatedBus = await Bus.findByIdAndUpdate(
+      req.params.id,
+      {
+        Busname,
+        numberOfSeats,
+        busDriver
+      },
+      { new: true }
+    );
+    if (!updatedBus) {
+      return res.status(404).json({ error: 'Bus not found' });
+    }
     res.json(updatedBus);
   } catch (error) {
-    res.status(400).json({ error: 'An error occurred while updating the bus.' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-
-const deleteBus = async (req, res) => {
+// Delete a bus by ID
+exports.deleteBus = async (req, res) => {
   try {
-    const { busId } = req.params;
-    await Bus.findByIdAndDelete(busId);
-    res.json({ message: 'Bus deleted successfully.' });
+    const deletedBus = await Bus.findByIdAndRemove(req.params.id);
+    if (!deletedBus) {
+      return res.status(404).json({ error: 'Bus not found' });
+    }
+    res.json({ message: 'Bus deleted successfully' });
   } catch (error) {
-    res.status(400).json({ error: 'An error occurred while deleting the bus.' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
-
-module.exports = { getAllBuses, addBus, updateBus, deleteBus };

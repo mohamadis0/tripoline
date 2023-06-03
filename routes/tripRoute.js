@@ -15,4 +15,7 @@ router.put('/:tripId', tripController.updateTrip);
 // Delete a trip
 router.delete('/:tripId', tripController.deleteTrip);
 
+// Get batch trips
+router.get('/batch', tripController.getBatchTrips);
+
 module.exports = router;

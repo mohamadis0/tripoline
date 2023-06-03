@@ -35,6 +35,10 @@ const tripSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
+    tripLine:{
+        type: String,
+        required: true
+    },
     associatedBuses: [
         {
             type: mongoose.Schema.Types.ObjectId,

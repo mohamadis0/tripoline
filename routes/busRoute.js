@@ -7,12 +7,14 @@ const router = express.Router();
 router.get('/', busController.getAllBuses);
 
 
-router.post('/createBus', busController.addBus);
+router.post('/', busController.createBus);
+
+router.get('/:id', busController.getBusById);
 
 
-router.put('/:busId', busController.updateBus);
+router.put('/:id', busController.updateBus);
 
 
-router.delete('/:busId', busController.deleteBus);
+router.delete('/:id', busController.deleteBus);
 
 module.exports = router;
