@@ -27,8 +27,9 @@ const getBatchTrips = async (req, res) => {
     const batchTrips = [];
 
     trips.forEach(trip => {
-      const startDate = trip.startDate;
-      const endDate = trip.endDate;
+      const startDate = trip.departureTime;
+      const endDate = trip.arrivalTime;
+      console.log(startDate, endDate)
       const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // duration in days
 
       for (let i = 0; i < duration; i++) {
