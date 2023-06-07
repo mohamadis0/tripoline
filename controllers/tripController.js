@@ -2,17 +2,19 @@ const Trip = require('../models/tripModel');
 
 const getAllTrips = async (req, res) => {
   try {
-    const trips = await Trip.find().populate('associatedBuses');
+    const trips = await Trip.find()
+      .populate('associatedBuses')
+      .populate('tripLocation')
+      .populate('tripDestination')
+      .populate('stations');
     res.json(trips);
   } catch (error) {
     res.status(500).json({ error: 'An error occurred while fetching trips.' });
   }
 };
 
-
 const createTrip = async (req, res) => {
   try {
-    // console.log(req.body)
     const trip = new Trip(req.body);
     const savedTrip = await trip.save();
     res.status(201).json(savedTrip);
@@ -23,13 +25,16 @@ const createTrip = async (req, res) => {
 
 const getBatchTrips = async (req, res) => {
   try {
-    const trips = await Trip.find().populate('associatedBuses');
+    const trips = await Trip.find()
+      .populate('associatedBuses')
+      .populate('tripLocation')
+      .populate('tripDestination')
+      .populate('stations');
     const batchTrips = [];
 
     trips.forEach(trip => {
       const startDate = trip.departureTime;
       const endDate = trip.arrivalTime;
-      console.log(startDate, endDate)
       const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // duration in days
 
       for (let i = 0; i < duration; i++) {
@@ -52,7 +57,6 @@ const updateTrip = async (req, res) => {
     res.status(400).json({ error: 'An error occurred while updating the trip.' });
   }
 };
-
 
 const deleteTrip = async (req, res) => {
   try {

@@ -59,7 +59,7 @@ const signup = async (req, res) => {
       phone,
       password,
       passwordConfirm,
-      profile: profileId,
+      profileId,
     });
 
     createSendToken(newUser, 201, res);

@@ -6,6 +6,7 @@ const tripRoute = require('./routes/tripRoute');
 const userRoute = require('./routes/userRoute');
 const profileRoute = require('./routes/profileRoute');
 const driverRoute = require('./routes/driverRoute');
+const stationRoute = require('./routes/stationRoute');
 const app = express();
 
 const cors = require('cors');
@@ -21,6 +22,7 @@ app.use('/api/trips', tripRoute);
 app.use('/api/profiles', profileRoute);
 app.use('/api/users', userRoute);
 app.use('/api/drivers',driverRoute)
+app.use('/api/stations',stationRoute)
 
 
 

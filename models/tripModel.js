@@ -7,11 +7,13 @@ const tripSchema = new mongoose.Schema({
         required: true
     },
     tripLocation: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Station',
         required: true
     },
     tripDestination: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Station',
         required: true
     },
     tripStatus: {
@@ -35,7 +37,8 @@ const tripSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    tripLine:{
+
+    tripLine: {
         type: String,
         required: true
     },
@@ -46,7 +49,14 @@ const tripSchema = new mongoose.Schema({
             required: true
         }
 
-    ]
+    ],
+    stations: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Station',
+            required: true
+        }
+    ],
 }
     , {
         timestamps: true,
