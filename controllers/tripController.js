@@ -15,38 +15,58 @@ const getAllTrips = async (req, res) => {
 
 const createTrip = async (req, res) => {
   try {
-    const trip = new Trip(req.body);
-    const savedTrip = await trip.save();
-    res.status(201).json(savedTrip);
-  } catch (error) {
-    res.status(400).json({ error: 'An error occurred while creating the trip.' });
-  }
-};
+    const startDate = new Date(req.body.departureTime);
+    const endDate = new Date(req.body.arrivalTime);
+    const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // duration in days
 
-const getBatchTrips = async (req, res) => {
-  try {
-    const trips = await Trip.find()
-      .populate('associatedBuses')
-      .populate('tripLocation')
-      .populate('tripDestination')
-      .populate('stations');
-    const batchTrips = [];
+    const tripPromises = [];
 
-    trips.forEach(trip => {
-      const startDate = trip.departureTime;
-      const endDate = trip.arrivalTime;
-      const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // duration in days
-
+    if (duration < 1) {
+      const trip = new Trip(req.body);
+      tripPromises.push(trip.save());
+    } else {
       for (let i = 0; i < duration; i++) {
-        batchTrips.push(trip);
+        const newTrip = new Trip(req.body);
+        newTrip.departureTime = new Date(startDate.getTime() + (i * 24 * 60 * 60 * 1000)); // set departure time for each day
+        newTrip.arrivalTime = new Date(startDate.getTime() + ((i + 1) * 24 * 60 * 60 * 1000)); // set arrival time for each day
+        tripPromises.push(newTrip.save());
       }
-    });
+    }
 
-    res.json(batchTrips);
+    const createdTrips = await Promise.all(tripPromises);
+    res.status(201).json(createdTrips);
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while fetching batch trips.' });
+    res.status(500).json({ error: 'An error occurred while creating the trip.' });
   }
 };
+
+
+
+
+// const getBatchTrips = async (req, res) => {
+//   try {
+//     const trips = await Trip.find()
+//       .populate('associatedBuses')
+//       .populate('tripLocation')
+//       .populate('tripDestination')
+//       .populate('stations');
+//     const batchTrips = [];
+
+//     trips.forEach(trip => {
+//       const startDate = trip.departureTime;
+//       const endDate = trip.arrivalTime;
+//       const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // duration in days
+
+//       for (let i = 0; i < duration; i++) {
+//         batchTrips.push(trip);
+//       }
+//     });
+
+//     res.json(batchTrips);
+//   } catch (error) {
+//     res.status(500).json({ error: 'An error occurred while fetching batch trips.' });
+//   }
+// };
 
 const updateTrip = async (req, res) => {
   try {
@@ -69,4 +89,4 @@ const deleteTrip = async (req, res) => {
   }
 };
 
-module.exports = { getAllTrips, createTrip, updateTrip, deleteTrip, getBatchTrips };
+module.exports = { getAllTrips, createTrip, updateTrip, deleteTrip };
