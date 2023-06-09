@@ -14,13 +14,9 @@ const busSchema = new mongoose.Schema({
         ref: 'Driver',
         required: true,
     }
-},
-
- {
+}, {
     timestamps: true
- }
-);
-
-
+});
 
 module.exports = mongoose.model('Bus', busSchema);
+

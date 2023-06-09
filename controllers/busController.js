@@ -1,14 +1,15 @@
 const Bus = require('../models/busModel');
 
+// Get all buses
 exports.getAllBuses = async (req, res) => {
   try {
     const buses = await Bus.find().populate('busDriver');
     res.json(buses);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
-
 
 // Create a new bus
 exports.createBus = async (req, res) => {
@@ -22,6 +23,7 @@ exports.createBus = async (req, res) => {
     const savedBus = await newBus.save();
     res.status(201).json(savedBus);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -35,6 +37,7 @@ exports.getBusById = async (req, res) => {
     }
     res.json(bus);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -57,6 +60,7 @@ exports.updateBus = async (req, res) => {
     }
     res.json(updatedBus);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -70,6 +74,7 @@ exports.deleteBus = async (req, res) => {
     }
     res.json({ message: 'Bus deleted successfully' });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
