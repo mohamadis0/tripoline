@@ -18,6 +18,11 @@ const stationSchema = new mongoose.Schema({
     stationTime: {
         type: Date,
         required: true
+    },
+    associatedTrip:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trip',
+        required: true
     }
 },
     {

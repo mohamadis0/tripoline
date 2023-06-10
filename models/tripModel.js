@@ -50,13 +50,6 @@ const tripSchema = new mongoose.Schema({
         }
 
     ],
-    stations: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Station',
-            required: true
-        }
-    ],
 }
     , {
         timestamps: true,

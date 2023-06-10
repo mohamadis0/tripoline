@@ -1,6 +1,7 @@
 const Station = require('../models/stationModel');
 
 
+
 exports.createStation = async (req, res) => {
   try {
     const station = new Station(req.body);
@@ -11,7 +12,6 @@ exports.createStation = async (req, res) => {
   }
 };
 
-
 exports.getAllStations = async (req, res) => {
   try {
     const stations = await Station.find();
@@ -20,7 +20,6 @@ exports.getAllStations = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 exports.getStationById = async (req, res) => {
   try {
@@ -34,7 +33,6 @@ exports.getStationById = async (req, res) => {
   }
 };
 
-
 exports.updateStation = async (req, res) => {
   try {
     const station = await Station.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -47,7 +45,6 @@ exports.updateStation = async (req, res) => {
   }
 };
 
-
 exports.deleteStation = async (req, res) => {
   try {
     const station = await Station.findByIdAndDelete(req.params.id);
@@ -55,6 +52,16 @@ exports.deleteStation = async (req, res) => {
       return res.status(404).json({ error: 'Station not found' });
     }
     res.status(204).json();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getStationsByTripId = async (req, res) => {
+  try {
+    const tripId = req.params.tripId;
+    const stations = await Station.find({ associatedTrip: tripId });
+    res.status(200).json(stations);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

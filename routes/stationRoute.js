@@ -8,6 +8,9 @@ router.post('/', stationController.createStation);
 // Get all stations
 router.get('/', stationController.getAllStations);
 
+// Get all stations for a trip by trip ID
+router.get('/trip/:tripId', stationController.getStationsByTripId);
+
 // Get a single station by ID
 router.get('/:id', stationController.getStationById);
 

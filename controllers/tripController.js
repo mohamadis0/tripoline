@@ -6,7 +6,6 @@ const getAllTrips = async (req, res) => {
       .populate('associatedBuses')
       .populate('tripLocation')
       .populate('tripDestination')
-      .populate('stations');
     res.json(trips);
   } catch (error) {
     res.status(500).json({ error: 'An error occurred while fetching trips.' });
@@ -40,33 +39,6 @@ const createTrip = async (req, res) => {
   }
 };
 
-
-
-
-// const getBatchTrips = async (req, res) => {
-//   try {
-//     const trips = await Trip.find()
-//       .populate('associatedBuses')
-//       .populate('tripLocation')
-//       .populate('tripDestination')
-//       .populate('stations');
-//     const batchTrips = [];
-
-//     trips.forEach(trip => {
-//       const startDate = trip.departureTime;
-//       const endDate = trip.arrivalTime;
-//       const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // duration in days
-
-//       for (let i = 0; i < duration; i++) {
-//         batchTrips.push(trip);
-//       }
-//     });
-
-//     res.json(batchTrips);
-//   } catch (error) {
-//     res.status(500).json({ error: 'An error occurred while fetching batch trips.' });
-//   }
-// };
 
 const updateTrip = async (req, res) => {
   try {
