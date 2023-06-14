@@ -12,6 +12,7 @@ const getAllTrips = async (req, res) => {
   }
 };
 
+
 const createTrip = async (req, res) => {
   try {
     const startDate = new Date(req.body.departureTime);
@@ -38,17 +39,50 @@ const createTrip = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while creating the trip.' });
   }
 };
+ 
+
+
+let sseClients = [];
+
+const getUpdates = async (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.flushHeaders();
+
+  sseClients.push(res);
+
+  req.on('close', () => {
+    sseClients = sseClients.filter((client) => client !== res);
+  });
+}
+    
+const sendSSEUpdate = (data) => {
+  const formattedData = JSON.stringify(data);
+  sseClients.forEach((client) => {
+    client.write(`data: ${formattedData}\n\n`);
+  });
+};
 
 
 const updateTrip = async (req, res) => {
   try {
     const { tripId } = req.params;
     const updatedTrip = await Trip.findByIdAndUpdate(tripId, req.body, { new: true });
-    res.json(updatedTrip);
+
+    if (!updatedTrip) {
+      return res.status(404).json({ error: 'Trip not found.' });
+    }
+
+    sendSSEUpdate(updatedTrip);
+    return res.json(updatedTrip);
   } catch (error) {
-    res.status(400).json({ error: 'An error occurred while updating the trip.' });
+    console.error('An error occurred while updating the trip:', error);
+    return res.status(500).json({ error: 'An error occurred while updating the trip.' });
   }
 };
+
 
 const deleteTrip = async (req, res) => {
   try {
@@ -61,4 +95,5 @@ const deleteTrip = async (req, res) => {
   }
 };
 
-module.exports = { getAllTrips, createTrip, updateTrip, deleteTrip };
+
+module.exports = { getAllTrips, createTrip, updateTrip, deleteTrip,getUpdates };

@@ -6,6 +6,8 @@ const router = express.Router();
 // Get all trips
 router.get('/', tripController.getAllTrips);
 
+router.get('/updates', tripController.getUpdates);
+
 // Create a trip
 router.post('/', tripController.createTrip);
 
