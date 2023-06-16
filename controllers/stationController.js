@@ -14,7 +14,7 @@ exports.createStation = async (req, res) => {
 
 exports.getAllStations = async (req, res) => {
   try {
-    const stations = await Station.find();
+    const stations = await Station.find().populate('associatedTrip');
     res.status(200).json(stations);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -58,11 +58,13 @@ exports.deleteStation = async (req, res) => {
 };
 
 exports.getStationsByTripId = async (req, res) => {
+  const { tripId } = req.params;
+
   try {
-    const tripId = req.params.tripId;
     const stations = await Station.find({ associatedTrip: tripId });
-    res.status(200).json(stations);
+    res.json(stations);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching stations:', error);
+    res.status(500).json({ error: 'Failed to fetch stations' });
   }
 };

@@ -16,10 +16,10 @@ const stationSchema = new mongoose.Schema({
         required: true,
     },
     stationTime: {
-        type: Date,
+        type: String,
         required: true
     },
-    associatedTrip:{
+    associatedTrip: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Trip',
         required: true

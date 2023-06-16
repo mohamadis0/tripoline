@@ -12,6 +12,39 @@ const getAllTrips = async (req, res) => {
   }
 };
 
+const getSingleTrip = async (req, res) => {
+  try {
+    const { tripId } = req.params;
+    const trip = await Trip.findById(tripId)
+      .populate('associatedBuses')
+      .populate('tripLocation')
+      .populate('tripDestination');
+
+    if (!trip) {
+      return res.status(404).json({ error: 'Trip not found.' });
+    }
+
+    res.json(trip);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching the trip.' });
+  }
+};
+
+const getAllUniqueTrips = async (req, res) => {
+  try {
+    const uniqueTrips = await Trip.distinct('_id').exec();
+    const trips = await Trip.find({ _id: { $in: uniqueTrips } })
+      .populate('associatedBuses')
+      .populate('tripLocation')
+      .populate('tripDestination');
+    res.json(trips);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching unique trips.' });
+  }
+};
+
+
+
 
 const createTrip = async (req, res) => {
   try {
@@ -39,7 +72,7 @@ const createTrip = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while creating the trip.' });
   }
 };
- 
+
 
 
 let sseClients = [];
@@ -57,7 +90,7 @@ const getUpdates = async (req, res) => {
     sseClients = sseClients.filter((client) => client !== res);
   });
 }
-    
+
 const sendSSEUpdate = (data) => {
   const formattedData = JSON.stringify(data);
   sseClients.forEach((client) => {
@@ -96,4 +129,4 @@ const deleteTrip = async (req, res) => {
 };
 
 
-module.exports = { getAllTrips, createTrip, updateTrip, deleteTrip,getUpdates };
+module.exports = { getAllTrips, createTrip, updateTrip, deleteTrip, getUpdates, getSingleTrip,getAllUniqueTrips };

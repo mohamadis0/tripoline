@@ -6,6 +6,10 @@ const router = express.Router();
 // Get all trips
 router.get('/', tripController.getAllTrips);
 
+router.get('/unique', tripController.getAllUniqueTrips);
+
+router.get('/:tripId', tripController.getSingleTrip)
+
 router.get('/updates', tripController.getUpdates);
 
 // Create a trip
